@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shot By Chance - Advanced Dynamic Photo Portfolio</title>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* --- General Setup & Advanced Gradient Background --- */
+        body {
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            padding: 0;
+            color: #e0e0e0;
+            background: linear-gradient(to bottom, #000000 0%, #1a1a1a 100%);
+            min-height: 100vh;
+            /* Hide body content initially to show pre-loader */
+            opacity: 0; 
+            transition: opacity 0.5s;
+        }
+
+        /* Show body content after pre-loader fades */
+        body.loaded {
+            opacity: 1;
+        }
+
+        /* --- PRE-LOADER STYLES (UPDATED FOR FAST FADE) --- */
+        #preloader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #000000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            opacity: 1;
+            /* Fade-out transition time (0.8s) */
+            transition: opacity 0.8s ease-out; 
+        }
+
+        .preloader-logo {
+            width: 80px;
+            height: 80px;
+            /* Removed spin animation */
+        }
+
+        /* Removed @keyframes spin */
+
+
+        /* --- Header / Navigation Bar --- */
+        .header-container {
+            position: sticky; 
+            top: 0;
+            z-index: 1000;
+            background: rgba(0, 0, 0, 0.85); 
+            backdrop-filter: blur(5px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+        }
+
+        .header {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 25px 20px 15px; 
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        /* --- Logo Styling --- */
+        .logo {
+            display: flex; 
+            align-items: center;
+            height: 40px; 
+        }
+
+        .logo img {
+            height: 100%; 
+            width: auto;
+            /* The 'filter' here makes your white logo visible on the dark header. */
+            filter: brightness(0) invert(1);
+            transition: transform 0.3s ease;
+        }
+
+        .logo img:hover {
+            transform: scale(1.05);
+        }
+
+        /* --- Main Title Styling --- */
+        .main-title {
+            text-align: center;
+            flex-grow: 1;
+            margin: 0;
+            font-family: 'Open Sans', sans-serif;
+            font-size: 2.8em;
+            font-weight: 800; 
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: #f8f8f8;
+        }
+
+        /* --- SUBHEADING BAR STYLES --- */
+        .subheading-bar {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 10px 20px;
+            text-align: center;
+        }
+
+        .nav-links a {
+            color: #F2C34B; 
+            text-decoration: none;
+            font-size: 0.85em;
+            font-weight: 500;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            margin: 0 15px;
+            padding: 5px 0;
+            transition: color 0.3s ease, border-bottom 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: #ffffff; 
+            border-bottom: 1px solid #F2C34B; 
+        }
+
+        /* Mobile Menu (Hamburger) Button */
+        .menu-toggle {
+            display: none;
+            cursor: pointer;
+            padding: 10px;
+            position: absolute;
+            right: 20px;
+            top: 30px;
+        }
+
+        .bar {
+            width: 25px;
+            height: 3px;
+            background-color: #ffffff;
+            margin: 4px 0;
+            transition: 0.4s;
+        }
+        
+        /* --- Dynamic Masonry Grid Layout --- */
+        .portfolio-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); 
+            grid-auto-rows: 10px;
+            gap: 10px;
+            max-width: 1400px;
+            margin: 20px auto 50px auto;
+            padding: 0 10px;
+        }
+
+        .photo-item {
+            position: relative;
+            overflow: hidden;
+            background-color: #222;
+            background-size: cover; 
+            background-position: center; 
+            background-repeat: no-repeat;
+            cursor: pointer;
+            border-radius: 4px;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+            transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94), 
+                        box-shadow 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+                        filter 0.4s ease-out;
+            display: flex;
+            align-items: flex-end;
+            justify-content: flex-start;
+        }
+
+        .photo-item:hover {
+            transform: scale(1.03) translateY(-3px);
+            filter: brightness(0.85);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.4);
+        }
+
+        .photo-item::after {
+            content: attr(data-title);
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 15px;
+            background: linear-gradient(to top, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0) 100%);
+            color: #fff;
+            font-size: 1em;
+            font-weight: 600;
+            opacity: 0;
+            transform: translateY(100%);
+            transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
+            pointer-events: none;
+        }
+
+        .photo-item:hover::after {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .h-1 { grid-row-end: span 10; } 
+        .h-2 { grid-row-end: span 15; }
+        .h-3 { grid-row-end: span 20; }
+        .h-4 { grid-row-end: span 25; }
+        .w-1 { grid-column-end: span 1; }
+        .w-2 { grid-column-end: span 2; }
+	
+        /* --- NEW CLASS TO CROP IMAGE DOWN --- */
+        .crop-down {
+            /* This moves the image down by positioning its background 40% from the top. 
+               You can adjust the 80% value (e.g., 60% for less, 100% for more) */
+            background-position: center 20% !important; 
+        }
+        /* -------------------------------------- */
+        /* --- Image Placeholders (Your Photos) --- */
+        .item-1 { background-image: url('https://i.imgur.com/n9NwAwY.jpeg'); } 
+        .item-2 { background-image: url('https://i.imgur.com/XPuz1Z3.jpeg'); }
+        /* Use your hosted image links for the rest, replacing the picsum URLs */
+        .item-3 { background-image: url('https://i.imgur.com/06YeFnh.jpeg'); } 
+        .item-4 { background-image: url('https://i.imgur.com/YPSE4E0.jpeg'); }
+        .item-5 { background-image: url('https://i.imgur.com/o0gvEqE.jpeg'); } 
+        .item-6 { background-image: url('https://i.imgur.com/EhYszZt.jpeg'); } 
+        .item-7 { background-image: url('https://i.imgur.com/542j3uQ.jpeg'); } 
+        .item-8 { background-image: url('https://i.imgur.com/030GDPr.jpeg'); }
+        .item-9 { background-image: url('https://i.imgur.com/PC013Mq.jpeg'); } 
+        .item-10 { background-image: url('https://i.imgur.com/4Wb967Z.jpeg'); }
+        .item-11 { background-image: url('https://i.imgur.com/RR0ajMY.jpeg'); } 
+        .item-12 { background-image: url('https://i.imgur.com/lWIpH4V.jpeg'); } 
+        .item-13 { background-image: url('https://i.imgur.com/viNZPa3.jpeg'); } 
+        .item-14 { background-image: url('https://i.imgur.com/DCfLH4K.jpeg'); } 
+        .item-15 { background-image: url('https://i.imgur.com/iX732CA.jpeg'); } 
+        .item-16 { background-image: url('https://i.imgur.com/fKLX19l.jpeg'); } 
+        .item-17 { background-image: url('https://i.imgur.com/6XRBZyd.jpeg'); } 
+        .item-18 { background-image: url('https://i.imgur.com/q7b6ziq.jpeg'); } 
+        .item-19 { background-image: url('https://i.imgur.com/0OGHgKZ.jpeg'); } 
+        .item-20 { background-image: url('https://i.imgur.com/s4pFO32.jpeg'); } 
+        .item-21 { background-image: url('https://i.imgur.com/3HlgjpB.jpeg'); } 
+        .item-22 { background-image: url('https://i.imgur.com/gzEvUBq.jpeg'); } 
+        .item-23 { background-image: url('https://i.imgur.com/4HbeSji.jpeg'); } 
+        .item-24 { background-image: url('https://i.imgur.com/BjT4eTU.jpeg'); } 
+        .item-25 { background-image: url('https://i.imgur.com/rCv0at3.jpeg'); } 
+        .item-26 { background-image: url('https://i.imgur.com/u4bWMPv.jpeg'); } 
+        .item-27 { background-image: url('https://i.imgur.com/429EGAh.jpeg'); } 
+        .item-28 { background-image: url('https://i.imgur.com/XTvfpYM.jpeg'); } 
+        .item-29 { background-image: url('https://i.imgur.com/PRKSuS8.jpeg'); } 
+        .item-30 { background-image: url('https://i.imgur.com/pWVPfg1.jpeg'); } 
+
+        /* --- INSTAGRAM FEED STYLES --- */
+        .instagram-header {
+            max-width: 1400px;
+            margin: 50px auto 20px auto;
+            text-align: center;
+            font-family: 'Open Sans', sans-serif;
+            font-size: 2em;
+            font-weight: 800; 
+            letter-spacing: 0.15em;
+            color: #F2C34B; 
+            text-decoration: none;
+            display: block; /* Make the whole header clickable */
+            transition: color 0.3s;
+        }
+        
+        .instagram-header:hover {
+            color: #ffffff;
+        }
+        
+        .instagram-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr); 
+            gap: 10px;
+            max-width: 1400px;
+            margin: 20px auto 50px auto;
+            padding: 0 10px;
+        }
+
+        .instagram-item {
+            position: relative;
+            aspect-ratio: 1 / 1; 
+            overflow: hidden;
+            background-color: #222;
+            background-size: cover; 
+            background-position: center; 
+            cursor: pointer;
+            transition: transform 0.3s ease, filter 0.3s ease;
+        }
+        
+        .instagram-item:hover {
+            filter: brightness(0.8);
+            transform: scale(0.98);
+        }
+
+        @media screen and (max-width: 768px) {
+            .instagram-grid {
+                grid-template-columns: repeat(2, 1fr); 
+            }
+        }
+        
+        /* --- INSTAGRAM IMAGE PLACEHOLDERS (UPDATED WITH YOUR LINKS) --- */
+        .insta-1 { background-image: url('https://scontent.cdninstagram.com/v/t51.82787-15/556969817_18535556527060226_6366874945194771568_n.jpg?stp=dst-jpg_e35_tt6&_nc_cat=108&ig_cache_key=MzczMzk1NTA2NjEyMzA5NzExMQ%3D%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6InhwaWRzLjEwODB4MTM1MC5zZHIuQzIifQ%3D%3D&_nc_ohc=EF2bjE1frzAQ7kNvwF7cLmF&_nc_oc=AdlEOnobTruTBsQqXU3iOlDHRrB8xKhW2f660J41dkU7WUTd3Im-eFpFAXeI_cj3JGo&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=scontent.cdninstagram.com&_nc_gid=hvGe0sYueLWYceOp2HwiFw&oh=00_Afh23lrlCssbU2ZlBd2OJshW-i8SFMZig9Bk1lh-wbBS4g&oe=692A9A92'); }
+        .insta-2 { background-image: url('https://scontent.cdninstagram.com/v/t51.82787-15/559331394_18534944701061456_7807942955796978472_n.jpg?stp=dst-jpg_e35_tt6&_nc_cat=106&ig_cache_key=MzczNTQ0ODM5MTkxNzg0NjgwNw%3D%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6InhwaWRzLjE0NDB4MTkyMC5zZHIuQzIifQ%3D%3D&_nc_ohc=h8iKqNkX534Q7kNvwEXBwDX&_nc_oc=AdmSJC6-dk6lmqDQQWImuNC1eb7GOUgrFVOETXaTuVBsWK7APhueYCS91TorECj30f0&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=scontent.cdninstagram.com&_nc_gid=hvGe0sYueLWYceOp2HwiFw&oh=00_Afhq7wjSH3cbfZG2QAx8G7dV9ooFVRMaWqPLqBz8lxtV2A&oe=692A9E22'); }
+        .insta-3 { background-image: url('https://scontent.cdninstagram.com/v/t51.71878-15/570861446_1360829895654586_4144991172923431438_n.jpg?stp=dst-jpg_e15_tt6&_nc_cat=106&ig_cache_key=Mzc1MjEzODY5OTMyMDY2MjYyNw%3D%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6InhwaWRzLjY0MHgxMTM2LnNkci5DMyJ9&_nc_ohc=Vb4t1dKZ42sQ7kNvwGieUJM&_nc_oc=AdlQOuTRXMFWcue4n5scwF4fs1VL4iBYlvz9Wy6nLM5W7xqJX0tOdH4uOxx5-pFstPU&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=scontent.cdninstagram.com&_nc_gid=BYv2bLoYaV-TgCpCbKQk_w&oh=00_Afi7GDBEsMmVjxGUR3rYMoKtSRa1W4dIOVBIQ5wPkz2NoQ&oe=692B7DDB'); }
+        .insta-4 { background-image: url('https://scontent.cdninstagram.com/v/t51.71878-15/491422437_1086573740196906_6199063804329985574_n.jpg?stp=dst-jpg_e35_p1080x1080_sh0.08_tt6&_nc_cat=101&ig_cache_key=MzQ4NDY0NzA0NTM5MDkzNzA1NjEwODY1NzM3MjY4NjM1NzQ%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6InhwaWRzLjQ1MDB4ODAwMC5zZHIuQzIifQ%3D%3D&_nc_ohc=FcF0rC8p4DgQ7kNvwG3SxaK&_nc_oc=AdljTHzx5aUTin-kajSnVM47vVd71gNBSQccmdZAg5KsdEZzpy7IbVg4DHETh9OFkwg&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=scontent.cdninstagram.com&_nc_gid=GmAXcnxSxZ_tuPnLjuxB-Q&oh=00_AfjEmZMQSrX-NzHICX1cV7neCSPChmP-V5O9AOT1HmddZA&oe=692AA160'); }
+        .insta-5 { background-image: url('https://scontent.cdninstagram.com/v/t51.71878-15/502393129_3067423213434091_4215416686631922506_n.jpg?stp=dst-jpg_e15_tt6&_nc_cat=111&ig_cache_key=MzY1OTI1NDUzOTAyNDI1ODIzNw%3D%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6InhwaWRzLjY0MHgxMTM2LnNkci5DMiJ9&_nc_ohc=qKISuro708QQ7kNvwH83T3f&_nc_oc=Adlo6o84qDhUG_b_r9rY2iPMGyubZsIK8YPNYDdJoBUvQOklFj_CSRhrBZVQCzW4sLI&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=scontent.cdninstagram.com&_nc_gid=hvGe0sYueLWYceOp2HwiFw&oh=00_AfhRgUYkpugKnpf8rkFTBDjTGAtw0hq-1DdbleGoTW7O1g&oe=692A8576'); }
+        .insta-6 { background-image: url('https://scontent.cdninstagram.com/v/t51.71878-15/503974801_641059992300520_5002513394961614491_n.jpg?stp=dst-jpg_e15_tt6&_nc_cat=106&ig_cache_key=MzQ4OTY1NzI1MzM0OTA0MTA1MTY0MTA1OTk3MjMwMDUyMg%3D%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6InhwaWRzLjcyMHgxMjgwLnNkci5DMiJ9&_nc_ohc=8j2VUh-vz68Q7kNvwEiDiZn&_nc_oc=AdljKryWOVjL-T-fiQwxbcFRZ1tZGe5iTMGoOKhA-nJhVw_6OtvF06DAU_XD3vf9A_Y&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=scontent.cdninstagram.com&_nc_gid=GmAXcnxSxZ_tuPnLjuxB-Q&oh=00_AfiIMJlG-EZkza4BVwn782qnsJVQEaOK82ZKDA997AOsDA&oe=692A9D94'); }
+        .insta-7 { background-image: url('https://scontent.cdninstagram.com/v/t51.71878-15/505970817_1806033316621258_5731366039728286982_n.jpg?stp=dst-jpg_e35_p1080x1080_sh0.08_tt6&_nc_cat=104&ig_cache_key=MzQ2MzUzOTQzMjcxODA5MDkzMjE4MDYwMzMzMDk5NTQ1OTI%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6InhwaWRzLjMzNzZ4NjAwMC5zZHIuQzIifQ%3D%3D&_nc_ohc=6JTEa0rDJVcQ7kNvwFl8V8Q&_nc_oc=AdkSdPQhuZWsleOHz_63tk0z6lPlz4eKkWj69Q-YzPlCdVnBay_kJo0q61TydSaGjas&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=scontent.cdninstagram.com&_nc_gid=GmAXcnxSxZ_tuPnLjuxB-Q&oh=00_AfgslMa7Q3KD4rUW61nBj1g-H7SWvPuC9pnMVrJdxwuMWQ&oe=692A7CE4'); }
+        .insta-8 { background-image: url('https://scontent.cdninstagram.com/v/t51.71878-15/506011719_1241575197550103_9107471025964754984_n.jpg?stp=dst-jpg_e35_p1080x1080_sh0.08_tt6&_nc_cat=110&ig_cache_key=MzQ2NDI3MTg2NTgzOTMxNDg0MzEyNDE1NzUxODc1NTAxMDQ%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6InhwaWRzLjMzNzZ4NjAwMC5zZHIuQzIifQ%3D%3D&_nc_ohc=wk4SFl1qWo4Q7kNvwHouCm5&_nc_oc=Adl_ZrvIYs-ruqnL5BWAYYRYoqodr4fDocGetS5YhNLIBtvAndb3rLCzdLfPPuiXJgE&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=scontent.cdninstagram.com&_nc_gid=GmAXcnxSxZ_tuPnLjuxB-Q&oh=00_Afhy5ZsI2L1Ps6DYg_J4Up8oju7Q4kol_iKoT_q2P17u5w&oe=692A8730'); }
+        .insta-9 { background-image: url('https://scontent.cdninstagram.com/v/t51.71878-15/554864528_1643100306649023_8219475122638584172_n.jpg?stp=dst-jpg_e15_tt6&_nc_cat=106&ig_cache_key=MzczMTcwNDc5MDA5MTg5NTY1NQ%3D%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6InhwaWRzLjY0MHgxMTM2LnNkci5DMiJ9&_nc_ohc=ZWRH3JS2VhEQ7kNvwE2SsCd&_nc_oc=Adk6QCi8gTszbAIQVRt6gvW1BIDZ4-Lg6bkStOKjf496GEPi5RSABO_hDbxfLL-fENQ&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=scontent.cdninstagram.com&_nc_gid=hvGe0sYueLWYceOp2HwiFw&oh=00_Afi_ELoKNP4alPBlgHOr9SBG2fVOf09Svhowof7nnOanVw&oe=692A86FE'); }
+        .insta-10 { background-image: url('https://scontent.cdninstagram.com/v/t51.71878-15/559136310_776102245192439_8845934131941691947_n.jpg?stp=dst-jpg_e15_tt6&_nc_cat=101&ig_cache_key=MzczNjI0MTk5NzkxMzYwNDUwNw%3D%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6InhwaWRzLjY0MHgxMTM2LnNkci5DMiJ9&_nc_ohc=YMiarPYFWwwQ7kNvwFAI9CK&_nc_oc=AdkPtcvwtK5RTYz3RleKs8ORExSlbWMDtIt50CFufLX4yzrdPz6dX1NC_5W7mUm5yC8&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=scontent.cdninstagram.com&_nc_gid=hvGe0sYueLWYceOp2HwiFw&oh=00_Afjlht5KQLnQ_aqi8Oo9KDyRvAiqdkIIwgG2Om3gogLPiw&oe=692AA0CE'); }
+
+        /* --- FOOTER STYLES (Existing) --- */
+        .footer-cta {
+            max-width: 1400px;
+            margin: 60px auto 40px auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .footer-cta a {
+            flex-grow: 1;
+            max-width: 300px;
+            background-color: #F2C34B; /* Accent color for buttons */
+            color: #000000;
+            text-align: center;
+            padding: 15px 20px;
+            text-decoration: none;
+            font-family: 'Inter', sans-serif;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            border-radius: 4px;
+            transition: background-color 0.3s ease;
+        }
+
+        .footer-cta a:hover {
+            background-color: #f7d27e; /* Slightly lighter accent on hover */
+        }
+
+        .footer {
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 40px 0 20px 0;
+            background: #000000;
+        }
+
+        .footer-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 40px;
+        }
+
+        .footer-section h3 {
+            color: #ffffff;
+            font-size: 1.1em;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            margin-bottom: 20px;
+        }
+
+        .social-links a {
+            color: #ffffff;
+            font-size: 1.5em;
+            margin-right: 15px;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .social-links a:hover {
+            color: #F2C34B;
+        }
+
+        .copyright-bar {
+            max-width: 1400px;
+            margin: 30px auto 0 auto;
+            padding: 15px 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.75em;
+            color: #888;
+            flex-wrap: wrap;
+        }
+
+        .copyright-links a {
+            color: #888;
+            text-decoration: none;
+            margin: 0 10px;
+            transition: color 0.3s;
+        }
+
+        .copyright-links a:hover {
+            color: #F2C34B;
+        }
+
+        .payment-icons img {
+            height: 18px;
+            margin-left: 5px;
+            filter: grayscale(100%) brightness(200%); /* Make icons visible on black background */
+        }
+        
+        .currency-selector {
+            border: 1px solid #333;
+            padding: 8px 15px;
+            display: inline-block;
+            cursor: pointer;
+            font-size: 0.8em;
+        }
+        
+        /* --- Responsiveness --- */
+        @media screen and (max-width: 1024px) {
+            .footer-content {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        @media screen and (max-width: 768px) {
+            /* Mobile Nav (Same as before) */
+            .main-title { display: none; }
+            .menu-toggle { display: block; }
+            .nav-links { display: none; flex-direction: column; position: absolute; top: 100%; left: 0; width: 100%; background: #000000; }
+            .nav-links.active { display: flex; }
+            .w-2, .h-2, .h-3, .h-4 { grid-column-end: span 1 !important; grid-row-end: span 15 !important; }
+            .portfolio-grid { grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); }
+            
+            /* Mobile Footer */
+            .footer-content {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            .copyright-bar {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .copyright-links {
+                margin-top: 10px;
+                display: flex;
+                flex-direction: column;
+                gap: 5px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="preloader">
+        <img class="preloader-logo" src="https://i.imgur.com/1YGiWW3.png" alt="Loader Logo" />
+    </div>
+
+    <div id="main-content">
+        <div class="header-container">
+            <div class="header">
+                <a href="#" class="logo">
+                    <img src="https://i.imgur.com/1YGiWW3.png" alt="Your Logo" />
+                </a>
+                <h1 class="main-title">SHOT BY CHANCE</h1>
+                <div class="menu-toggle" onclick="toggleMenu()">
+                    <div class="bar"></div>
+                    <div class="bar"></div>
+                    <div class="bar"></div>
+                </div>
+            </div>
+
+            <div class="subheading-bar">
+                <div class="nav-links" id="navbarNav">
+                    <a href="#photos">PHOTOS</a>
+                    <a href="#videos">VIDEOS</a>
+                    <a href="#about">ABOUT ME</a>
+                    <a href="#contact">CONTACT</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="portfolio-grid">
+            <div class="photo-item item-1 h-4 w-1" data-title="Rylann.RR"></div>
+           <div class="photo-item item-2 h-1 w-2 crop-down" data-title="The Piss Missiles"></div>
+            <div class="photo-item item-3 h-1 w-1" data-title="R32"></div>
+            <div class="photo-item item-4 h-4 w-1" data-title="B&H <3"></div>
+            <div class="photo-item item-5 h-4 w-1" data-title="Deep Forest Path"></div>
+            <div class="photo-item item-6 h-2 w-2" data-title="City Views"></div>
+            <div class="photo-item item-7 h-3 w-2" data-title=""></div>
+            <div class="photo-item item-8 h-2 w-1" data-title="Maso 636"></div>
+            <div class="photo-item item-9 h-1 w-1" data-title="Playhouse Square"></div>
+            <div class="photo-item item-10 h-3 w-1" data-title=""></div>
+            <div class="photo-item item-11 h-3 w-1" data-title=""></div>
+            <div class="photo-item item-12 h-2 w-1" data-title="Type R"></div>
+            <div class="photo-item item-13 h-4 w-2" data-title=""></div>
+            <div class="photo-item item-14 h-2 w-2" data-title="MK5 Supra"></div>
+            <div class="photo-item item-15 h-3 w-1" data-title="KP"></div>
+            <div class="photo-item item-16 h-4 w-1" data-title="Golden Hour"></div>
+            <div class="photo-item item-17 h-3 w-2" data-title="Ocean Waves"></div>
+            <div class="photo-item item-18 h-3 w-1" data-title="Wildlife in Action"></div>
+            <div class="photo-item item-19 h-2 w-1" data-title="R1.DEV"></div>
+            <div class="photo-item item-20 h-3 w-2" data-title="Skyline"></div>
+            <div class="photo-item item-21 h-4 w-2" data-title="Dockside"></div>
+            <div class="photo-item item-22 h-2 w-1" data-title="R6.ADAM"></div>
+            <div class="photo-item item-23 h-3 w-2" data-title="Vibrant Market"></div>
+            <div class="photo-item item-24 h-2 w-1" data-title="KP"></div>
+            <div class="photo-item item-25 h-1 w-1" data-title="Night Sky"></div>
+            <div class="photo-item item-26 h-3 w-1" data-title="Beautiful Phychotic"></div>
+            <div class="photo-item item-27 h-3 w-1" data-title="Z.CBR600"></div>
+            <div class="photo-item item-28 h-4 w-1" data-title="KP"></div>
+            <div class="photo-item item-29 h-4 w-2" data-title="NEZZY"></div>
+            <div class="photo-item item-30 h-2 w-1" data-title="Beautiful Phychotic"></div>
+        </div>
+
+        <a href="https://www.instagram.com/chance.cmc/" class="instagram-header" target="_blank">
+            @CHANCE.CMC
+        </a>
+
+        <div class="instagram-grid">
+            <a href="https://www.instagram.com/chance.cmc/" class="instagram-item insta-1" target="_blank"></a>
+            <a href="https://www.instagram.com/chance.cmc/" class="instagram-item insta-2" target="_blank"></a>
+            <a href="https://www.instagram.com/chance.cmc/" class="instagram-item insta-3" target="_blank"></a>
+            <a href="https://www.instagram.com/chance.cmc/" class="instagram-item insta-4" target="_blank"></a>
+            <a href="https://www.instagram.com/chance.cmc/" class="instagram-item insta-5" target="_blank"></a>
+            <a href="https://www.instagram.com/chance.cmc/" class="instagram-item insta-6" target="_blank"></a>
+            <a href="https://www.instagram.com/chance.cmc/" class="instagram-item insta-7" target="_blank"></a>
+            <a href="https://www.instagram.com/chance.cmc/" class="instagram-item insta-8" target="_blank"></a>
+            <a href="https://www.instagram.com/chance.cmc/" class="instagram-item insta-9" target="_blank"></a>
+            <a href="https://www.instagram.com/chance.cmc/" class="instagram-item insta-10" target="_blank"></a>
+        </div>
+        <div class="footer-cta">
+            <a href="https://www.amazon.com/hz/wishlist/ls/3DT6BW934SS65?ref_=wl_share">SHOP MY EQUIPMENT</a>
+            <a href="https://www.youtube.com/@chancecmc">WATCH ME ON YOUTUBE</a>
+            <a href="https://www.instagram.com/chance.cmc/">FOLLOW ME ON INSTAGRAM</a>
+        </div>
+        
+        <footer class="footer">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>SOCIAL</h3>
+                    <div class="social-links">
+                        <a href="https://www.instagram.com/chance.cmc/" aria-label="Instagram">I</a>
+                        <a href="https://www.youtube.com/" aria-label="YouTube">Y</a>
+                    </div>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>EXPLORE</h3>
+                    <p style="font-size: 0.8em; color: #888;">FAQ<br>Shipping<br>Returns</p>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>REGION</h3>
+                    <div class="currency-selector">
+                        United States (USD $) ▼
+                    </div>
+                </div>
+            </div>
+
+            <div class="copyright-bar">
+                <span style="display: flex; align-items: center; gap: 15px; flex-wrap: wrap;">
+                    © SHOT BY CHANCE 2025 
+                    <div class="copyright-links">
+                        <a href="#">Search</a>
+                        <a href="#">Trade Promotion Terms & Conditions</a>
+                        <a href="#">Policy</a>
+                    </div>
+                </span>
+                
+                <span class="payment-icons">
+                    <img src="https://via.placeholder.com/40x20/F0F0F0/000000?text=VISA" alt="VISA">
+                    <img src="https://via.placeholder.com/40x20/F0F0F0/000000?text=Apple" alt="Apple Pay">
+                    <img src="https://via.placeholder.com/40x20/F0F0F0/000000?text=Google" alt="Google Pay">
+                    <img src="https://via.placeholder.com/40x20/F0F0F0/000000?text=Shop" alt="Shop Pay">
+                    <img src="https://via.placeholder.com/40x20/F0F0F0/000000?text=Amex" alt="Amex">
+                </span>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        // Mobile Menu Function
+        function toggleMenu() {
+            const nav = document.getElementById('navbarNav');
+            nav.classList.toggle('active');
+        }
+
+        // Pre-loader Function - Now flashes and fades quickly
+        window.addEventListener('load', function() {
+            const preloader = document.getElementById('preloader');
+            const body = document.body;
+
+            // Long delay (2.2s) to ensure logo is seen, then start fade-out
+            setTimeout(() => {
+                preloader.style.opacity = '0'; 
+                // Reveal body content immediately after fade starts
+                body.classList.add('loaded');
+
+                // After the fade transition is complete (0.8s), remove the preloader element
+                setTimeout(() => {
+                    preloader.style.display = 'none';
+                }, 800); 
+            }, 2200); // <-- THIS LINE CONTROLS THE INITIAL DISPLAY TIME (2200ms)
+        });
+    </script>
+
+</body>
+</html>
