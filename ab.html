@@ -1,0 +1,708 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ShotByChance - About Me</title>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Anton&display=swap" rel="stylesheet"> 
+    
+    <style>
+        /* ========================================================= */
+        /* --- CORE STYLES & FIXES --- */
+        /* ========================================================= */
+        html {
+            scroll-behavior: smooth; /* Smooth scroll effect */
+        }
+        
+        /* --- General Setup & Advanced Gradient Background (ORIGINAL) --- */
+        body {
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            padding: 0;
+            color: #e0e0e0;
+            background: linear-gradient(to bottom, #000000 0%, #111111 100%);
+            min-height: 100vh;
+            /* opacity: 0; REMOVED THIS LINE TO FIX BLACK SCREEN */
+            transition: opacity 0.5s;
+        }
+
+        /* --- PRELOADER STYLES (ORIGINAL) --- */
+        #preloader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #000;
+            z-index: 9999;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: opacity 0.5s;
+        }
+
+        .preloader-spinner {
+            border: 4px solid rgba(255, 255, 255, 0.3);
+            border-top: 4px solid #F2C34B;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        body.loaded #preloader {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        /* ========================================================= */
+        /* --- HEADER & NAVIGATION (ORIGINAL, with centering fix) --- */
+        /* ========================================================= */
+        .header-container {
+            width: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 2px solid #F2C34B;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+        }
+
+        .header {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 20px;
+            position: relative; /* Needed for absolute positioning of title */
+        }
+
+        .logo img {
+            height: 40px;
+            width: auto;
+            transition: transform 0.3s ease;
+        }
+
+        .logo img:hover {
+            transform: scale(1.05);
+        }
+
+        /* --- FIX: Main Title Centering --- */
+        .main-title {
+            font-family: 'Open Sans', sans-serif;
+            font-size: 2.2em;
+            font-weight: 800;
+            color: #F2C34B;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            margin: 0;
+            position: absolute; /* Position absolutely to ignore siblings */
+            left: 50%; /* Start at center */
+            transform: translateX(-50%); /* Move back by half its width */
+            white-space: nowrap; 
+        }
+
+        .subheading-bar {
+            background: rgba(10, 10, 10, 0.9);
+            border-top: 1px solid rgba(242, 195, 75, 0.2);
+        }
+
+        .nav-links {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            padding: 10px 20px;
+        }
+
+        .nav-links a {
+            color: #e0e0e0;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1em;
+            letter-spacing: 0.05em;
+            transition: color 0.3s ease, border-bottom 0.3s ease;
+            padding: 5px 0;
+        }
+
+        .nav-links a:hover {
+            color: #F2C34B;
+            border-bottom: 2px solid #F2C34B;
+        }
+        
+        /* --- MAIN CONTENT SECTIONS (RETAINED FOR STYLING CONSISTENCY) --- */
+        
+        .section-header {
+            text-align: center;
+            margin: 40px 0 60px 0;
+        }
+
+        .section-header h2 {
+            font-family: 'Open Sans', sans-serif;
+            font-size: 3.5em;
+            font-weight: 800;
+            color: #F2C34B;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            margin-bottom: 5px;
+        }
+
+        .section-header p {
+            font-size: 1.1em;
+            color: #aaa;
+            margin: 0;
+        }
+
+        /* --- FOOTER (ORIGINAL) --- */
+        .footer-cta {
+            background: #1a1a1a;
+            padding: 30px 20px;
+            text-align: center;
+            border-top: 1px solid #333;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+            box-shadow: 0 -4px 10px rgba(0, 0, 0, 0.5);
+        }
+
+        .footer-cta a {
+            background: #F2C34B;
+            color: #111;
+            padding: 12px 25px;
+            text-decoration: none;
+            font-weight: 700;
+            border-radius: 5px;
+            transition: background 0.3s ease, transform 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .footer-cta a:hover {
+            background: #e0b03b;
+            transform: translateY(-2px);
+        }
+
+        .footer {
+            background: #000;
+            padding: 20px 20px;
+            text-align: center;
+            font-size: 0.9em;
+            color: #555;
+            border-top: 1px solid #111;
+        }
+
+        .footer p {
+            margin: 5px 0;
+        }
+        
+        /* --- MODALS (ORIGINAL) --- */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.8);
+        }
+
+        .modal-content {
+            background-color: #1a1a1a;
+            margin: 10% auto;
+            padding: 30px;
+            border: 1px solid #F2C34B;
+            width: 80%;
+            max-width: 600px;
+            border-radius: 8px;
+            position: relative;
+        }
+
+        .close-btn {
+            color: #F2C34B;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            transition: color 0.3s;
+        }
+
+        .close-btn:hover,
+        .close-btn:focus {
+            color: white;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .modal-content h2 {
+            color: #F2C34B;
+            text-align: center;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 20px;
+        }
+
+        /* Review and Contact Form Styles (Simple Placeholder) */
+        .review-form, .contact-form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .review-form input[type="text"],
+        .review-form textarea,
+        .contact-form input[type="text"],
+        .contact-form textarea {
+            padding: 12px;
+            border: 1px solid #444;
+            background-color: #0d0d0d;
+            color: #e0e0e0;
+            border-radius: 4px;
+        }
+
+        .review-form button,
+        .contact-form button {
+            background-color: #F2C34B;
+            color: #111;
+            padding: 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 700;
+            text-transform: uppercase;
+            transition: background-color 0.3s;
+        }
+
+        .review-form button:hover,
+        .contact-form button:hover {
+            background-color: #e0b03b;
+        }
+
+        /* --- LIGHTBOX (ORIGINAL) --- */
+        .overlay {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            padding-top: 60px;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.95);
+        }
+
+        .lightbox-content {
+            margin: auto;
+            display: block;
+            width: 90%;
+            max-width: 900px;
+            max-height: 90%;
+            object-fit: contain;
+        }
+
+        /* --- MOBILE MENU STYLES (ORIGINAL) --- */
+        .menu-toggle {
+            display: none; /* Hidden on desktop */
+            flex-direction: column;
+            cursor: pointer;
+            padding: 10px;
+            z-index: 101; 
+        }
+
+        .menu-toggle .bar {
+            width: 25px;
+            height: 3px;
+            background-color: #F2C34B;
+            margin: 4px 0;
+            transition: 0.4s;
+        }
+
+        /* ========================================================= */
+        /* --- NEW ABOUT ME STYLES (Content & Instagram Grid) --- */
+        /* ========================================================= */
+        .about-page-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 40px 20px 80px 20px;
+        }
+
+        .about-header-text {
+            margin-bottom: 40px;
+            padding-left: 20px;
+        }
+
+        .about-header-text h3 {
+            font-family: 'Inter', sans-serif;
+            font-size: 1em;
+            font-weight: 500;
+            color: #F2C34B;
+            text-transform: uppercase;
+            margin-bottom: 10px;
+            letter-spacing: 0.1em;
+        }
+
+        .about-header-text h1 {
+            font-family: 'Anton', sans-serif;
+            font-size: 4em;
+            line-height: 1.1;
+            color: #e0e0e0;
+            text-transform: uppercase;
+            margin-top: 0;
+            margin-bottom: 15px;
+            letter-spacing: 0.05em;
+        }
+
+        .about-header-text p {
+            font-family: 'Inter', sans-serif;
+            font-size: 1.1em;
+            color: #aaa;
+            margin: 0;
+            letter-spacing: 0.05em;
+        }
+
+        .about-main-layout {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 40px;
+            align-items: flex-start;
+        }
+
+        .about-image-container {
+            flex: 2;
+            min-width: 400px;
+        }
+
+        .about-image {
+            width: 100%;
+            height: auto;
+            border-radius: 8px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+            transition: transform 0.5s ease;
+        }
+
+        .about-details {
+            flex: 1;
+            min-width: 300px;
+            background-color: #000;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+            border-left: 3px solid #F2C34B;
+        }
+
+        .about-details h2 {
+            font-family: 'Inter', sans-serif;
+            font-size: 1.2em;
+            font-weight: 700;
+            color: #e0e0e0;
+            text-transform: uppercase;
+            margin-top: 0;
+            margin-bottom: 25px;
+            letter-spacing: 0.08em;
+        }
+
+        .about-details ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .about-details ul li {
+            font-family: 'Inter', sans-serif;
+            font-size: 1.05em;
+            line-height: 1.6;
+            color: #aaa;
+            margin-bottom: 15px;
+        }
+
+        .about-details ul li strong {
+            color: #e0e0e0;
+            font-weight: 600;
+            margin-right: 8px;
+        }
+
+        /* --- INSTAGRAM GRID STYLES (User's requested HTML) --- */
+        .instagram-section-wrapper {
+            max-width: 1200px;
+            margin: 80px auto 40px auto; 
+            padding: 0 20px;
+            text-align: center;
+        }
+        
+        .instagram-header {
+            max-width: 1400px;
+            margin: 50px auto 20px auto;
+            text-align: center;
+            font-family: 'Open Sans', sans-serif;
+            font-size: 2em;
+            font-weight: 800; 
+            letter-spacing: 0.15em;
+            color: #F2C34B; 
+            text-decoration: none;
+            display: block;
+            transition: color 0.3s;
+        }
+        
+        .instagram-header:hover {
+            color: #ffffff;
+        }
+
+        .instagram-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr); 
+            gap: 10px;
+            max-width: 1400px;
+            margin: 20px auto 50px auto;
+            padding: 0 10px;
+        }
+
+        .instagram-item {
+            position: relative;
+            aspect-ratio: 1 / 1; 
+            overflow: hidden;
+            background-color: #222;
+            background-size: cover; 
+            background-position: center; 
+            cursor: pointer;
+            transition: transform 0.3s ease, filter 0.3s ease;
+        }
+
+        .instagram-item:hover {
+            filter: brightness(0.8);
+            transform: scale(0.98);
+        }
+        
+        /* Placeholder Images for the Grid Items (Matching previous content) */
+        .insta-1 { background-image: url('https://scontent.cdninstagram.com/v/t51.82787-15/556969817_18535556527060226_6366874945194771568_n.jpg?stp=dst-jpg_e35_tt6&_nc_cat=108&ig_cache_key=MzczMzk1NTA2NjEyMzA5NzExMQ%3D%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6InhwaWRzLjEwODB4MTM1MC5zZHIuQzIifQ%3D%3D&_nc_ohc=EF2bjE1frzAQ7kNvwF7cLmF&_nc_oc=AdlEOnobTruTBsQqXU3iOlDHRrB8xKhW2f660J41dkU7WUTd3Im-eFpFAXeI_cj3JGo&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=scontent.cdninstagram.com&_nc_gid=hvGe0sYueLWYceOp2HwiFw&oh=00_Afh23lrlCssbU2ZlBd2OJshW-i8SFMZig9Bk1lh-wbBS4g&oe=692A9A92'); }
+        .insta-2 { background-image: url('https://scontent.cdninstagram.com/v/t51.82787-15/559331394_18534944701061456_7807942955796978472_n.jpg?stp=dst-jpg_e35_tt6&_nc_cat=106&ig_cache_key=MzczNTQ0ODM5MTkxNzg0NjgwNw%3D%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6InhwaWRzLjE0NDB4MTkyMC5zZHIuQzIifQ%3D%3D&_nc_ohc=h8iKqNkX534Q7kNvwEXBwDX&_nc_oc=AdmSJC6-dk6lmqDQQWImuNC1eb7GOUgrFVOETXaTuVBsWK7APhueYCS91TorECj30f0&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=scontent.cdninstagram.com&_nc_gid=hvGe0sYueLWYceOp2HwiFw&oh=00_Afhq7wjSH3cbfZG2QAx8G7dV9ooFVRMaWqPLqBz8lxtV2A&oe=692A9E22'); }
+        .insta-3 { background-image: url('https://scontent.cdninstagram.com/v/t51.71878-15/570861446_1360829895654586_4144991172923431438_n.jpg?stp=dst-jpg_e15_tt6&_nc_cat=106&ig_cache_key=Mzc1MjEzODY5OTMyMDY2MjYyNw%3D%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6InhwaWRzLjY0MHgxMTM2LnNkci5DMyJ9&_nc_ohc=Vb4t1dKZ42sQ7kNvwGieUJM&_nc_oc=AdlQOuTRXMFWcue4n5scwF4fs1VL4iBYlvz9Wy6nLM5W7xqJX0tOdH4uOxx5-pFstPU&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=scontent.cdninstagram.com&_nc_gid=BYv2bLoYaV-TgCpCbKQk_w&oh=00_Afi7GDBEsMmVjxGUR3rYMoKtSRa1W4dIOVBIQ5wPkz2NoQ&oe=692B7DDB'); }
+        .insta-4 { background-image: url('https://scontent.cdninstagram.com/v/t51.71878-15/491422437_1086573740196906_6199063804329985574_n.jpg?stp=dst-jpg_e35_p1080x1080_sh0.08_tt6&_nc_cat=101&ig_cache_key=MzQ4NDY0NzA0NTM5MDkzNzA1NjEwODY1NzM3MjY4NjM1NzQ%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6InhwaWRzLjQ1MDB4ODAwMC5zZHIuQzIifQ%3D%3D&_nc_ohc=FcF0rC8p4DgQ7kNvwG3SxaK&_nc_oc=AdljTHzx5aUTin-kajSnVM47vVd71gNBSQccmdZAg5KsdEZzpy7IbVg4DHETh9OFkwg&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=scontent.cdninstagram.com&_nc_gid=GmAXcnxSxZ_tuPnLjuxB-Q&oh=00_AfjEmZMQSrX-NzHICX1cV7neCSPChmP-V5O9AOT1HmddZA&oe=692AA160'); 
+            /* ADJUSTMENT: Moves the image to be centered horizontally but aligned to the bottom vertically. */
+            background-position: center top;
+        }
+        .insta-5 { background-image: url('https://scontent.cdninstagram.com/v/t51.71878-15/502393129_3067423213434091_4215416686631922506_n.jpg?stp=dst-jpg_e15_tt6&_nc_cat=111&ig_cache_key=MzY1OTI1NDUzOTAyNDI1ODIzNw%3D%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6InhwaWRzLjY0MHgxMTM2LnNkci5DMiJ9&_nc_ohc=qKISuro708QQ7kNvwH83T3f&_nc_oc=Adlo6o84qDhUG_b_r9rY2iPMGyubZsIK8YPNYDdJoBUvQOklFj_CSRhrBZVQCzW4sLI&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=scontent.cdninstagram.com&_nc_gid=hvGe0sYueLWYceOp2HwiFw&oh=00_AfhRgUYkpugKnpf8rkFTBDjTGAtw0hq-1DdbleGoTW7O1g&oe=692A8576'); }
+        .insta-6 { background-image: url('https://scontent.cdninstagram.com/v/t51.71878-15/503974801_641059992300520_5002513394961614491_n.jpg?stp=dst-jpg_e15_tt6&_nc_cat=106&ig_cache_key=MzQ4OTY1NzI1MzM0OTA0MTA1MTY0MTA1OTk3MjMwMDUyMg%3D%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6InhwaWRzLjcyMHgxMjgwLnNkci5DMiJ9&_nc_ohc=8j2VUh-vz68Q7kNvwEiDiZn&_nc_oc=AdljKryWOVjL-T-fiQwxbcFRZ1tZGe5iTMGoOKhA-nJhVw_6OtvF06DAU_XD3vf9A_Y&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=scontent.cdninstagram.com&_nc_gid=GmAXcnxSxZ_tuPnLjuxB-Q&oh=00_AfiIMJlG-EZkza4BVwn782qnsJVQEaOK82ZKDA997AOsDA&oe=692A9D94'); }
+        .insta-7 { background-image: url('https://scontent.cdninstagram.com/v/t51.71878-15/505970817_1806033316621258_5731366039728286982_n.jpg?stp=dst-jpg_e35_p1080x1080_sh0.08_tt6&_nc_cat=104&ig_cache_key=MzQ2MzUzOTQzMjcxODA5MDkzMjE4MDYzMzMwOTk1NDU5MjI%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6InhwaWRzLjMzNzZ4NjAwMC5zZHIuQzIifQ%3D%3D&_nc_ohc=6JTEa0rDJVcQ7kNvwFl8V8Q&_nc_oc=AdkSdPQhuZWsleOHz_63tk0z6lPlz4eKkWj69Q-YzPlCdVnBay_kJo0q61TydSaGjas&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=scontent.cdninstagram.com&_nc_gid=GmAXcnxSxZ_tuPnLjuxB-Q&oh=00_AfgslMa7Q3KD4rUW61nBj1g-H7SWvPuC9pnMVrJdxwuMWQ&oe=692A7CE4'); 
+            /* ADJUSTMENT: Moves the image to be centered horizontally but aligned to the bottom vertically. */
+            background-position: center top;
+        }
+        .insta-8 { background-image: url('https://scontent.cdninstagram.com/v/t51.71878-15/506011719_1241575197550103_9107471025964754984_n.jpg?stp=dst-jpg_e35_p1080x1080_sh0.08_tt6&_nc_cat=110&ig_cache_key=MzQ2NDI3MTg2NTgzOTMxNDg0MzEyNDE1NzUxODc1NTAxMDQ%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6InhwaWRzLjMzNzZ4NjAwMC5zZHIuQzIifQ%3D%3D&_nc_ohc=wk4SFl1qWo4Q7kNvwHouCm5&_nc_oc=Adl_ZrvIYs-ruqnL5BWAYYRYoqodr4fDocGetS5YhNLIBtvAndb3rLCzdLfPPuiXJgE&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=scontent.cdninstagram.com&_nc_gid=GmAXcnxSxZ_tuPnLjuxB-Q&oh=00_Afhy5ZsI2L1Ps6DYg_J4Up8oju7Q4kol_iKoT_q2P17u5w&oe=692A8730'); }
+        .insta-9 { background-image: url('https://scontent.cdninstagram.com/v/t51.71878-15/554864528_1643100306649023_8219475122638584172_n.jpg?stp=dst-jpg_e15_tt6&_nc_cat=106&ig_cache_key=MzczMTcwNDc5MDA5MTg5NTY1NQ%3D%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6InhwaWRzLjY0MHgxMTM2LnNkci5DMiJ9&_nc_ohc=ZWRH3JS2VhEQ7kNvwE2SsCd&_nc_oc=Adk6QCi8gTszbAIQVRt6gvW1BIDZ4-Lg6bkStOKjf496GEPi5RSABO_hDbxfLL-fENQ&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=scontent.cdninstagram.com&_nc_gid=hvGe0sYueLWYceOp2HwiFw&oh=00_Afi_ELoKNP4alPBlgHOr9SBG2fVOf09Svhowof7nnOanVw&oe=692A86FE'); }
+        .insta-10 { 
+            background-image: url('https://scontent.cdninstagram.com/v/t51.71878-15/559136310_776102245192439_8845934131941691947_n.jpg?stp=dst-jpg_e15_tt6&_nc_cat=101&ig_cache_key=MzczNjI0MTk5NzkxMzYwNDUwNw%3D%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6InhwaWRzLjY0MHgxMTM2LnNkci5DMiJ9&_nc_ohc=YMiarPYFWwwQ7kNvwFAI9CK&_nc_oc=AdkPtcvwtK5RTYz3RleKs8ORExSlbWMDtIt50CFufLX4yzrdPz6dX1NC_5W7mUm5yC8&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=scontent.cdninstagram.com&_nc_gid=hvGe0sYueLWYceOp2HwiFw&oh=00_Afjlht5KQLnQ_aqi8Oo9KDyRvAiqdkIIwgG2Om3gogLPiw&oe=692AA0CE');
+            /* ADJUSTMENT: Moves the image to be centered horizontally but aligned to the bottom vertically. */
+            background-position: center top;
+        }
+
+        /* ========================================================= */
+        /* --- MEDIA QUERIES (ORIGINAL & NEW) --- */
+        /* ========================================================= */
+        @media screen and (max-width: 1024px) {
+            .main-title {
+                font-size: 1.8em; 
+            }
+            .about-main-layout {
+                flex-direction: column;
+                align-items: center;
+            }
+            .about-image-container, .about-details {
+                min-width: unset;
+                width: 100%;
+                flex: none;
+            }
+            .about-header-text h1 {
+                font-size: 3em;
+            }
+        }
+
+        @media screen and (max-width: 768px) {
+            .header {
+                padding: 10px 15px;
+            }
+            .main-title {
+                font-size: 1.5em; 
+                left: 50%; 
+                transform: translateX(-50%);
+            }
+            .menu-toggle {
+                display: flex;
+            }
+            .nav-links {
+                display: none;
+                flex-direction: column;
+                gap: 10px;
+                padding: 10px 20px;
+                background: rgba(0, 0, 0, 0.95);
+                position: absolute;
+                top: 60px; 
+                width: 100%;
+                box-sizing: border-box;
+                border-top: 1px solid #333;
+                left: 0; 
+            }
+            .nav-links.active {
+                display: flex;
+            }
+            .nav-links a {
+                padding: 10px 0;
+                text-align: center;
+                border-bottom: none;
+            }
+            .footer-cta {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            /* New About Styles for Mobile */
+            .about-page-content {
+                padding: 30px 15px 60px 15px;
+            }
+            .about-header-text {
+                padding-left: 0;
+                text-align: center;
+            }
+            .about-header-text h1 {
+                font-size: 2.2em;
+            }
+            .about-header-text h3, .about-header-text p {
+                font-size: 0.9em;
+            }
+            .about-image-container {
+                order: -1;
+                margin-bottom: 30px;
+            }
+            .about-details {
+                padding: 20px;
+            }
+            .about-details h2 {
+                font-size: 1.1em;
+                text-align: center;
+            }
+            .about-details ul li {
+                font-size: 0.95em;
+            }
+            .instagram-grid {
+                grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); 
+            }
+        }
+    </style>
+    </head>
+
+<body class="loaded">
+    
+    <div id="lightbox" class="overlay">
+        <img class="lightbox-content" src="" alt="Enlarged Image" />
+    </div>
+
+    <div id="main-content">
+
+        <div class="header-container">
+            <div class="header">
+                <a href="index.html" class="logo"> <img src="https://i.imgur.com/1YGiWW3.png" alt="Your Logo" />
+                </a>
+                <h1 class="main-title">SHOT BY CHANCE</h1>
+                <div class="menu-toggle" onclick="toggleMenu()">
+                    <div class="bar"></div>
+                    <div class="bar"></div>
+                    <div class="bar"></div>
+                </div>
+            </div>
+            <div class="subheading-bar">
+                <div class="nav-links" id="navbarNav">
+                    <a href="index.html#photos">PHOTOS</a>
+                    <a href="index.html#videos">VIDEOS</a>
+                    <a href="ab.html">ABOUT ME</a>
+                    <a href="index.html#reviews">REVIEWS</a> 
+                    </div>
+            </div>
+        </div>
+
+        <div class="about-page-content">
+            <div class="about-header-text">
+                <h3>ABOUT ME [CHANCE]</h3>
+                <h1>G'DAY HOW THE FUCK ARE YA</h1>
+                <p>CONGRATULATIONS ON FINDING MY ABOUT ME PAGE</p>
+            </div>
+
+            <div class="about-main-layout">
+                <div class="about-image-container">
+                    <img class="about-image" src="https://i.imgur.com/DCfLH4K.jpeg" alt="Photographer Chance Cmc" />
+                </div>
+                <div class="about-details">
+                    <h2>THIS IS THE BEST I COULD DO</h2>
+                    <ul>
+                        <li><strong>Age:</strong> 23</li>
+                        <li><strong>Current Camera:</strong> Sony A7S3 </li>
+                        <li><strong>Favourite lens:</strong> Sigma 24-70mm F2.8 MKII</li>
+                        <li><strong>Favourite car:</strong> GT3RS </li>
+                        <li><strong>Weird Habit:</strong> Talking to Myself </li>
+                        <li><strong>Dream Car:</strong> LS Swapped Datsun 240z on Bags 😎 </li>
+                        <li><strong>Fun Fact:</strong> I don't hate Canon Users </li>
+                        <li><strong>Bucket List Shot:</strong> Koenigsegg Factory Runway in Angelholm, Sweden</li>
+                        <li><strong>Favourite Destination:</strong> Bonneville Salt Flats, Utah, USA</li>
+                        <li><strong>Favourite Food:</strong> Chicken Parma, Banh Mi or a good spicy Beef Pho</li>
+                        <li><strong>Born:</strong> OHIO 🌰 </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="instagram-section-wrapper">
+            <a href="https://www.instagram.com/chance.cmc/" class="instagram-header" target="_blank">
+                @CHANCE.CMC
+            </a>
+            <div class="instagram-grid">
+                <a href="https://www.instagram.com/chance.cmc/" class="instagram-item insta-1" target="_blank"></a>
+                <a href="https://www.instagram.com/chance.cmc/" class="instagram-item insta-2" target="_blank"></a>
+                <a href="https://www.instagram.com/chance.cmc/" class="instagram-item insta-3" target="_blank"></a>
+                <a href="https://www.instagram.com/chance.cmc/" class="instagram-item insta-4" target="_blank"></a>
+                <a href="https://www.instagram.com/chance.cmc/" class="instagram-item insta-5" target="_blank"></a>
+                <a href="https://www.instagram.com/chance.cmc/" class="instagram-item insta-6" target="_blank"></a>
+                <a href="https://www.instagram.com/chance.cmc/" class="instagram-item insta-7" target="_blank"></a>
+                <a href="https://www.instagram.com/chance.cmc/" class="instagram-item insta-8" target="_blank"></a>
+                <a href="https://www.instagram.com/chance.cmc/" class="instagram-item insta-9" target="_blank"></a>
+                <a href="https://www.instagram.com/chance.cmc/" class="instagram-item insta-10" target="_blank"></a>
+            </div>
+        </div>
+
+        <div class="footer-cta">
+            <a href="https://www.amazon.com/hz/wishlist/ls/3DT6BW934SS65?ref_=wl_share">SHOP MY EQUIPMENT</a>
+            <a href="https://www.youtube.com/@chancecmc">WATCH ME ON YOUTUBE</a>
+            <a href="https://www.instagram.com/chance.cmc/">FOLLOW ME ON INSTAGRAM</a>
+            <a href="index.html#reviews" id="view-reviews-btn">VIEW CLIENT REVIEWS</a>
+        </div>
+
+        <footer class="footer">
+            <p>&copy; 2024 SHOT BY CHANCE | All Rights Reserved.</p>
+            <p>Designed and Built by Chance Cmc</p>
+        </footer>
+        
+    </div>
+
+    <script>
+        // --- Mobile Menu Toggle ---
+        function toggleMenu() {
+            const nav = document.getElementById('navbarNav');
+            nav.classList.toggle('active');
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            
+            // Final safety net to ensure the body is visible
+            document.body.style.opacity = '1';
+        });
+
+    </script>
+
+</body>
+</html>
