@@ -12,7 +12,7 @@
             margin: 0;
             padding: 0;
             color: #e0e0e0;
-            background: linear-gradient(to bottom, #000000 0%, #1a1a1a 100%);
+            background: linear-gradient(to bottom, #000000 0%, #111111 100%);
             min-height: 100vh;
             /* Hide body content initially to show pre-loader */
             opacity: 0; 
@@ -46,7 +46,7 @@
         }
 
         /* ------------------------------------------------ */
-        /* --- CORE FEATURES: LIGHTBOX & REVIEW MODAL STYLES --- */
+        /* --- CORE FEATURES: LIGHTBOX & MODAL STYLES --- */
         /* ------------------------------------------------ */
         
         .overlay {
@@ -63,6 +63,9 @@
             cursor: pointer;
             opacity: 0;
             transition: opacity 0.3s ease;
+            overflow-y: auto; /* Allow scrolling for modal content on small screens */
+            padding: 20px 0;
+            box-sizing: border-box;
         }
 
         .overlay.active {
@@ -90,9 +93,10 @@
         #lightbox.active .lightbox-content {
             transform: scale(1);
         }
-
-        /* --- Review Form Container (The actual card) --- */
-        #review-form-modal {
+        
+        /* --- Shared Modal Container Styles --- */
+        #review-form-modal,
+        #contact-form-container {
             background-color: #1a1a1a;
             color: #e0e0e0;
             padding: 30px;
@@ -101,15 +105,17 @@
             max-width: 500px;
             width: 90%;
             cursor: default;
+            margin: auto; /* Center vertically if container is wider than content */
             transform: translateY(-20px);
             transition: transform 0.3s ease-out;
         }
         
-        #review-form-modal.active {
+        .overlay.active > div { /* Target the inner modal box */
             transform: translateY(0);
         }
 
-        #review-form-modal h3 {
+        #review-form-modal h3,
+        #contact-form-container h3 {
             font-family: 'Open Sans', sans-serif;
             font-size: 1.8em;
             color: #F2C34B;
@@ -119,17 +125,18 @@
         }
 
         /* Form elements */
-        .review-field {
+        .review-field, .form-group {
             margin-bottom: 15px;
         }
         
-        .review-field label {
+        .review-field label, .form-group label {
             display: block;
             margin-bottom: 5px;
             font-weight: 600;
         }
 
-        .review-field input, .review-field textarea {
+        .review-field input, .review-field textarea, 
+        .form-group input, .form-group textarea {
             width: 100%;
             padding: 10px;
             border: 1px solid #333;
@@ -140,10 +147,15 @@
             resize: vertical;
         }
         
-        .review-field textarea {
+        .review-field textarea, .form-group textarea {
             min-height: 100px;
         }
-
+        
+        .contact-form-popup {
+            display: grid;
+            gap: 15px;
+        }
+        
         /* Star Rating Styles */
         .star-rating {
             display: flex;
@@ -170,8 +182,9 @@
             color: #F2C34B;
         }
 
-        /* Submit Button */
-        #submit-review {
+        /* Review/Contact Submit Button */
+        #submit-review,
+        .contact-submit-btn {
             display: block;
             width: 100%;
             padding: 12px;
@@ -187,12 +200,13 @@
             transition: background-color 0.3s ease;
         }
 
-        #submit-review:hover {
+        #submit-review:hover,
+        .contact-submit-btn:hover {
             background-color: #f7d27e;
         }
 
         /* ------------------------------------------------ */
-        /* --- REVIEWS DISPLAY SECTION STYLES (New) --- */
+        /* --- REVIEWS DISPLAY SECTION STYLES --- */
         /* ------------------------------------------------ */
         .reviews-section {
             max-width: 1400px;
@@ -256,10 +270,10 @@
             padding: 50px 0;
             font-size: 1.1em;
         }
+        
         /* ------------------------------------------------ */
-
-
         /* --- Header / Navigation Bar (Existing Styles) --- */
+        /* (Unchanged from previous version) */
         .header-container {
             position: sticky; 
             top: 0;
@@ -349,6 +363,7 @@
         }
         
         /* --- Dynamic Masonry Grid Layout (Existing Styles) --- */
+        /* (Unchanged from previous version) */
         .portfolio-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); 
@@ -415,7 +430,8 @@
             background-position: center 20% !important; 
         }
         
-        /* --- Image Placeholders (Restored from initial working code) --- */
+        /* --- Image Placeholders --- */
+        /* (Unchanged from previous version) */
         .item-1 { background-image: url('https://i.imgur.com/n9NwAwY.jpeg'); } 
         .item-2 { background-image: url('https://i.imgur.com/XPuz1Z3.jpeg'); }
         .item-3 { background-image: url('https://i.imgur.com/06YeFnh.jpeg'); } 
@@ -447,7 +463,8 @@
         .item-29 { background-image: url('https://i.imgur.com/PRKSuS8.jpeg'); } 
         .item-30 { background-image: url('https://i.imgur.com/pWVPfg1.jpeg'); } 
 
-        /* --- INSTAGRAM FEED STYLES (Omitted for brevity, assumed to be here) --- */
+        /* --- INSTAGRAM FEED STYLES --- */
+        /* (Unchanged from previous version) */
         .instagram-header {
             max-width: 1400px;
             margin: 50px auto 20px auto;
@@ -491,8 +508,9 @@
             transform: scale(0.98);
         }
         
-        /* --- INSTAGRAM IMAGE PLACEHOLDERS (Omitted for brevity, assumed to be here) --- */
-        .insta-1 { background-image: url('https://scontent.cdninstagram.com/v/t51.82787-15/556969817_18535556527060226_6366874945194771568_n.jpg?stp=dst-jpg_e35_tt6&_nc_cat=108&ig_cache_key=MzczMzk1NTA2NjEyMzA5NzExMQ%3D%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6InhwaWRzLjEwODB4MTM1MC5zZHIuQzIifQ%3D%3D&_nc_ohc=EF2bjE1frzAQ7kNvwF7cLmF&_nc_oc=AdlEOnobTruTBsQqXU3iOlDHRrB8xKhW2f660J41dkU7WUTd3Im-eFpFAXeI_cj3JGo&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=scontent.cdninstagram.com&_nc_gid=hvGe0sYueLWYceOp2HwiFw&oh=00_Afh23lrlCssbU2ZlBd2OJshW-i8SFMZig9Bk1lh-wbBS4g&oe=692A9A92'); }
+        /* --- INSTAGRAM IMAGE PLACEHOLDERS --- */
+        /* (Unchanged from previous version) */
+        .insta-1 { background-image: url('https://scontent.cdninstagram.com/v/t51.82787-15/556969817_18535556527060226_6366874945194771568_n.jpg?stp=dst-jpg_e35_tt6&_nc_cat=108&ig_cache_key=MzczMzk1NTA2NjEyMzA5NzExMQ%3D%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6InhwaWRzLjEwODB4MTM1MC5zZHIuQzIifQ%3D%3D&_nc_ohc=EF2bjE1frzAQ7kNvwF7cLmF&_nc_oc=AdlEOnobTruTBsQqXU3iOlDHRrB8xKhW2f660J41dkU7WUTd3Im-eFpFAXeI_cj3JGo&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=scontent.cdninstagram.com&_nc_gid=hvGe0sYueLWYceOp2HwiFw&oh=00_Afh23lrlCssbU2ZlBd2OJsh-i8SFMZig9Bk1lh-wbBS4g&oe=692A9A92'); }
         .insta-2 { background-image: url('https://scontent.cdninstagram.com/v/t51.82787-15/559331394_18534944701061456_7807942955796978472_n.jpg?stp=dst-jpg_e35_tt6&_nc_cat=106&ig_cache_key=MzczNTQ0ODM5MTkxNzg0NjgwNw%3D%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6InhwaWRzLjE0NDB4MTkyMC5zZHIuQzIifQ%3D%3D&_nc_ohc=h8iKqNkX534Q7kNvwEXBwDX&_nc_oc=AdmSJC6-dk6lmqDQQWImuNC1eb7GOUgrFVOETXaTuVBsWK7APhueYCS91TorECj30f0&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=scontent.cdninstagram.com&_nc_gid=hvGe0sYueLWYceOp2HwiFw&oh=00_Afhq7wjSH3cbfZG2QAx8G7dV9ooFVRMaWqPLqBz8lxtV2A&oe=692A9E22'); }
         .insta-3 { background-image: url('https://scontent.cdninstagram.com/v/t51.71878-15/570861446_1360829895654586_4144991172923431438_n.jpg?stp=dst-jpg_e15_tt6&_nc_cat=106&ig_cache_key=Mzc1MjEzODY5OTMyMDY2MjYyNw%3D%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6InhwaWRzLjY0MHgxMTM2LnNkci5DMyJ9&_nc_ohc=Vb4t1dKZ42sQ7kNvwGieUJM&_nc_oc=AdlQOuTRXMFWcue4n5scwF4fs1VL4iBYlvz9Wy6nLM5W7xqJX0tOdH4uOxx5-pFstPU&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=scontent.cdninstagram.com&_nc_gid=BYv2bLoYaV-TgCpCbKQk_w&oh=00_Afi7GDBEsMmVjxGUR3rYMoKtSRa1W4dIOVBIQ5wPkz2NoQ&oe=692B7DDB'); }
         .insta-4 { background-image: url('https://scontent.cdninstagram.com/v/t51.71878-15/491422437_1086573740196906_6199063804329985574_n.jpg?stp=dst-jpg_e35_p1080x1080_sh0.08_tt6&_nc_cat=101&ig_cache_key=MzQ4NDY0NzA0NTM5MDkzNzA1NjEwODY1NzM3MjY4NjM1NzQ%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6InhwaWRzLjQ1MDB4ODAwMC5zZHIuQzIifQ%3D%3D&_nc_ohc=FcF0rC8p4DgQ7kNvwG3SxaK&_nc_oc=AdljTHzx5aUTin-kajSnVM47vVd71gNBSQccmdZAg5KsdEZzpy7IbVg4DHETh9OFkwg&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=scontent.cdninstagram.com&_nc_gid=GmAXcnxSxZ_tuPnLjuxB-Q&oh=00_AfjEmZMQSrX-NzHICX1cV7neCSPChmP-V5O9AOT1HmddZA&oe=692AA160'); }
@@ -505,6 +523,7 @@
 
 
         /* --- FOOTER STYLES (Updated for 4 buttons) --- */
+        /* (Unchanged from previous version) */
         .footer-cta {
             max-width: 1400px;
             margin: 60px auto 40px auto;
@@ -533,19 +552,30 @@
             background-color: #f7d27e;
         }
         
-        /* Specific styling for the new review button */
+        /* Specific styling for the new review/contact buttons */
         #leave-review-btn {
             background-color: #ffffff;
+            color: #000000;
         }
         #leave-review-btn:hover {
             background-color: #e0e0e0;
+        }
+        
+        #open-contact-modal-footer {
+            background-color: #000000;
+            color: #F2C34B;
+            border: 1px solid #F2C34B;
+        }
+        #open-contact-modal-footer:hover {
+             background-color: #1a1a1a;
+             color: #ffffff;
         }
 
 
         .footer {
             border-top: 1px solid rgba(255, 255, 255, 0.1);
             padding: 40px 0 20px 0;
-            background: #000000;
+            /* REMOVED: background: #000000; to allow the body gradient to show */
         }
 
         .footer-content {
@@ -689,8 +719,41 @@
             </form>
         </div>
     </div>
+    
+    <div id="contact-modal" class="overlay">
+        <div id="contact-form-container">
+            <h3>GET IN TOUCH</h3>
+            
+            <form action="https://formsubmit.co/VisualsByChance@outlook.com" method="POST" class="contact-form-popup">
+                
+                <div class="form-group">
+                    <label for="name">Your Name</label>
+                    <input type="text" id="name" name="Name" required placeholder="John Doe">
+                </div>
+                
+                <div class="form-group">
+                    <label for="email">Your Email</label>
+                    <input type="email" id="email" name="Email" required placeholder="john.doe@example.com">
+                </div>
 
+                <div class="form-group">
+                    <label for="phone">Phone Number (Optional)</label>
+                    <input type="tel" id="phone" name="Phone" placeholder="(555) 555-5555">
+                </div>
 
+                <div class="form-group">
+                    <label for="message">Message</label>
+                    <textarea id="message" name="Message" required placeholder="I'm interested in booking a session for my car..."></textarea>
+                </div>
+
+                <input type="hidden" name="_next" value="https://chanc3cmc.github.io/SHOTBYCHANCE.github.io/#message-sent">
+                
+                <input type="hidden" name="_captcha" value="false">
+
+                <button type="submit" class="contact-submit-btn">SEND MESSAGE</button>
+            </form>
+        </div>
+    </div>
     <div id="main-content">
         <div class="header-container">
             <div class="header">
@@ -711,25 +774,25 @@
                     <a href="#videos">VIDEOS</a>
                     <a href="#about">ABOUT ME</a>
                     <a href="#reviews">REVIEWS</a>
-                    <a href="#contact">CONTACT</a>
+                    <a href="#" id="open-contact-modal-nav">CONTACT</a>
                 </div>
             </div>
         </div>
 
         <div class="portfolio-grid">
-            <div class="photo-item item-1 h-4 w-1" data-title="Rylann.RR" data-url="https://i.imgur.com/n9NwAwY.jpeg"></div>
+            <div id="photos" class="photo-item item-1 h-4 w-1" data-title="Rylann.RR" data-url="https://i.imgur.com/n9NwAwY.jpeg"></div>
             <div class="photo-item item-2 h-1 w-2 crop-down" data-title="The Piss Missiles" data-url="https://i.imgur.com/XPuz1Z3.jpeg"></div>
             <div class="photo-item item-3 h-1 w-1" data-title="R32" data-url="https://i.imgur.com/06YeFnh.jpeg"></div>
             <div class="photo-item item-4 h-4 w-1" data-title="B&H <3" data-url="https://i.imgur.com/YPSE4E0.jpeg"></div>
             <div class="photo-item item-5 h-4 w-1" data-title="Deep Forest Path" data-url="https://i.imgur.com/o0gvEqE.jpeg"></div>
             <div class="photo-item item-6 h-2 w-2" data-title="City Views" data-url="https://i.imgur.com/EhYszZt.jpeg"></div>
-            <div class="photo-item item-7 h-3 w-2" data-title="" data-url="https://i.imgur.com/542j3uQ.jpeg"></div>
+            <div class="photo-item item-7 h-3 w-2" data-title="City Tunnel" data-url="https://i.imgur.com/542j3uQ.jpeg"></div>
             <div class="photo-item item-8 h-2 w-1" data-title="Maso 636" data-url="https://i.imgur.com/030GDPr.jpeg"></div>
             <div class="photo-item item-9 h-1 w-1" data-title="Playhouse Square" data-url="https://i.imgur.com/PC013Mq.jpeg"></div>
-            <div class="photo-item item-10 h-3 w-1" data-title="" data-url="https://i.imgur.com/4Wb967Z.jpeg"></div>
-            <div class="photo-item item-11 h-3 w-1" data-title="" data-url="https://i.imgur.com/RR0ajMY.jpeg"></div>
+            <div class="photo-item item-10 h-3 w-1" data-title="Rainy Night" data-url="https://i.imgur.com/4Wb967Z.jpeg"></div>
+            <div class="photo-item item-11 h-3 w-1" data-title="Motorcycle" data-url="https://i.imgur.com/RR0ajMY.jpeg"></div>
             <div class="photo-item item-12 h-2 w-1" data-title="Type R" data-url="https://i.imgur.com/lWIpH4V.jpeg"></div>
-            <div class="photo-item item-13 h-4 w-2" data-title="" data-url="https://i.imgur.com/viNZPa3.jpeg"></div>
+            <div class="photo-item item-13 h-4 w-2" data-title="Forest Drive" data-url="https://i.imgur.com/viNZPa3.jpeg"></div>
             <div class="photo-item item-14 h-2 w-2" data-title="MK5 Supra" data-url="https://i.imgur.com/DCfLH4K.jpeg"></div>
             <div class="photo-item item-15 h-3 w-1" data-title="KP" data-url="https://i.imgur.com/iX732CA.jpeg"></div>
             <div class="photo-item item-16 h-4 w-1" data-title="Golden Hour" data-url="https://i.imgur.com/fKLX19l.jpeg"></div>
@@ -771,22 +834,21 @@
             <a href="https://www.youtube.com/@chancecmc">WATCH ME ON YOUTUBE</a>
             <a href="https://www.instagram.com/chance.cmc/">FOLLOW ME ON INSTAGRAM</a>
             <a id="leave-review-btn">LEAVE A REVIEW</a> 
-        </div>
+            </div>
 
         <section id="reviews" class="reviews-section">
             <h2>CLIENT REVIEWS</h2>
             <div id="review-display-area" class="review-grid">
                 </div>
         </section>
-
-
+        
         <footer class="footer">
             <div class="footer-content">
                 <div class="footer-section">
                     <h3>SOCIAL</h3>
                     <div class="social-links">
                         <a href="https://www.instagram.com/chance.cmc/" aria-label="Instagram">I</a>
-                        <a href="https://www.youtube.com/" aria-label="YouTube">Y</a>
+                        <a href="https://www.youtube.com/@chancecmc" aria-label="YouTube">Y</a>
                     </div>
                 </div>
                 
@@ -845,20 +907,15 @@
             nav.classList.toggle('active');
         }
 
-        // ------------------------------------------------------------------
-        // --- FIX: PRE-LOADER FUNCTION (Ensures body becomes visible) ---
-        // ------------------------------------------------------------------
+        // --- PRE-LOADER FUNCTION (Ensures body becomes visible) ---
         window.addEventListener('load', function() {
             const preloader = document.getElementById('preloader');
             const body = document.body;
 
-            // Waits 2.2s then starts fade out (which makes body visible via .loaded class)
             setTimeout(() => {
                 preloader.style.opacity = '0'; 
-                // CRITICAL STEP: Add 'loaded' class to make main content visible
                 body.classList.add('loaded'); 
 
-                // After the fade transition is complete (0.8s), remove the preloader element
                 setTimeout(() => {
                     preloader.style.display = 'none';
                 }, 800); 
@@ -887,7 +944,7 @@
         });
 
         // ------------------------------------------------------------------
-        // --- 2. REVIEW SYSTEM JAVASCRIPT (Reverted to LocalStorage) ---
+        // --- 2. REVIEW SYSTEM JAVASCRIPT (LocalStorage) ---
         // ------------------------------------------------------------------
         
         const reviewModal = document.getElementById('review-modal');
@@ -895,17 +952,13 @@
         const reviewForm = document.getElementById('review-form');
         const reviewDisplayArea = document.getElementById('review-display-area');
 
-        // --- Review Data Handling (Uses local storage for persistence) ---
-
         function getReviews() {
-            // Default reviews shown if local storage is empty
             const defaultReviews = [
                 { name: 'S. Davis', rating: 5, text: "Chance was incredible to work with! The photoshoot was fun and the results were stunning. Highly recommend for automotive photography!" },
                 { name: 'J. Smith', rating: 5, text: "Professional, creative, and delivers high-quality work on time. A true talent behind the lens." },
                 { name: 'Anonymous', rating: 4, text: "Great experience overall. The communication could have been slightly faster, but the final images were perfect." }
             ];
             const storedReviews = localStorage.getItem('shotbychance_reviews');
-            // If reviews exist in local storage, use them. Otherwise, use the defaults.
             return storedReviews ? JSON.parse(storedReviews) : defaultReviews;
         }
 
@@ -941,18 +994,18 @@
                     </div>
                     <p class="review-card-text">"${review.text}"</p>
                 `;
-                reviewDisplayArea.prepend(reviewCard); // Add new reviews to the top
+                reviewDisplayArea.prepend(reviewCard); 
             });
         }
         
         // --- Event Listeners ---
         
-        // 1. Open Review Modal
+        // Open Review Modal
         leaveReviewBtn.addEventListener('click', function() {
             toggleOverlay(reviewModal, true);
         });
 
-        // 2. Close Review Modal when overlay is clicked
+        // Close Review Modal when overlay is clicked
         reviewModal.addEventListener('click', function(e) {
             if (e.target.id === 'review-modal') {
                 toggleOverlay(reviewModal, false);
@@ -960,7 +1013,7 @@
             }
         });
 
-        // 3. Handle Form Submission
+        // Handle Form Submission
         reviewForm.addEventListener('submit', function(e) {
             e.preventDefault();
             
@@ -983,7 +1036,7 @@
             reviews.push(newReview);
             saveReviews(reviews);
 
-            displayReviews(); // Refresh the display area
+            displayReviews(); 
 
             // Close modal and reset form
             toggleOverlay(reviewModal, false);
@@ -991,10 +1044,49 @@
             alert('Thank you for your review! It has been submitted.');
         });
         
-        // --- Initial Load ---
+        // ------------------------------------------------------------------
+        // --- 3. NEW CONTACT FORM MODAL JAVASCRIPT ---
+        // ------------------------------------------------------------------
+        
+        const contactModal = document.getElementById('contact-modal');
+        const openContactModalNav = document.getElementById('open-contact-modal-nav');
+        // If you add the footer button, uncomment this:
+        // const openContactModalFooter = document.getElementById('open-contact-modal-footer');
+
+        // Function to open Contact Modal
+        function openContactModal(e) {
+            e.preventDefault();
+            toggleOverlay(contactModal, true);
+            // Close mobile menu if open
+            const nav = document.getElementById('navbarNav');
+            if (nav.classList.contains('active')) {
+                toggleMenu();
+            }
+        }
+
+        // 1. Open Contact Modal from Nav Link
+        if (openContactModalNav) {
+             openContactModalNav.addEventListener('click', openContactModal);
+        }
+        
+        // 2. Open Contact Modal from optional Footer Link (if you add it)
+        // if (openContactModalFooter) {
+        //      openContactModalFooter.addEventListener('click', openContactModal);
+        // }
+        
+        // 3. Close Contact Modal when overlay is clicked
+        contactModal.addEventListener('click', function(e) {
+            // Check if the click was on the overlay itself, not the form container
+            if (e.target.id === 'contact-modal') {
+                toggleOverlay(contactModal, false);
+            }
+        });
+
+
+        // --- Initial Load & Global Keydown ---
         document.addEventListener('DOMContentLoaded', displayReviews);
         
-        // 4. Close Overlays with ESC key
+        // Close Overlays with ESC key (UPDATED)
         document.addEventListener('keydown', function(e) {
             if (e.key === "Escape") {
                 if (lightbox.classList.contains('active')) {
@@ -1002,6 +1094,8 @@
                 } else if (reviewModal.classList.contains('active')) {
                     toggleOverlay(reviewModal, false);
                     reviewForm.reset();
+                } else if (contactModal.classList.contains('active')) { 
+                    toggleOverlay(contactModal, false);
                 }
             }
         });
